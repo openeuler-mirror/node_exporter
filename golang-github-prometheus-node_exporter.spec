@@ -27,7 +27,7 @@
 
 Name:           golang-%{provider}-%{project}-%{repo}
 Version:        1.0.1
-Release:        1%{?dist}
+Release:        2
 Summary:        Exporter for machine metrics
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -54,38 +54,6 @@ BuildArch:     noarch
 
 BuildRequires: git
 BuildRequires: golang >= 1.14
-%if 0%{?with_check} && ! 0%{?with_bundled}
-BuildRequires: golang(github.com/beevik/ntp)
-BuildRequires: golang(github.com/coreos/go-systemd/dbus)
-BuildRequires: golang(github.com/godbus/dbus)
-BuildRequires: golang(github.com/golang/protobuf/proto)
-BuildRequires: golang(github.com/kolo/xmlrpc)
-BuildRequires: golang(github.com/mdlayher/wifi)
-BuildRequires: golang(github.com/prometheus/client_golang/prometheus)
-BuildRequires: golang(github.com/prometheus/client_model/go)
-BuildRequires: golang(github.com/prometheus/common/expfmt)
-BuildRequires: golang(github.com/prometheus/common/log)
-BuildRequires: golang(github.com/prometheus/procfs)
-BuildRequires: golang(github.com/soundcloud/go-runit/runit)
-BuildRequires: golang(golang.org/x/sys/unix)
-%endif
-
-Requires:      golang(github.com/beevik/ntp)
-Requires:      golang(github.com/coreos/go-systemd/dbus)
-Requires:      golang(github.com/godbus/dbus)
-Requires:      golang(github.com/golang/protobuf/proto)
-Requires:      golang(github.com/kolo/xmlrpc)
-Requires:      golang(github.com/mdlayher/wifi)
-Requires:      golang(github.com/prometheus/client_golang/prometheus)
-Requires:      golang(github.com/prometheus/client_model/go)
-Requires:      golang(github.com/prometheus/common/expfmt)
-Requires:      golang(github.com/prometheus/common/log)
-Requires:      golang(github.com/prometheus/procfs)
-Requires:      golang(github.com/soundcloud/go-runit/runit)
-Requires:      golang(golang.org/x/sys/unix)
-
-Provides:      golang(%{import_path}/collector) = %{version}-%{release}
-Provides:      golang(%{import_path}/collector/ganglia) = %{version}-%{release}
 
 %description devel
 %{summary}
@@ -280,6 +248,9 @@ chmod 771 /var/lib/node_exporter/textfile_collector
 %endif
 
 %changelog
+* Sat Feb 21 2021 yangzhao <yangzhao1@kylinos.cn> 1.0.1-2
+- Remove unnecessary requirements
+
 * Fri Jun 21 2020 houjian <houjian@kylinos.cn> 1.0.1-1
 - Package Init
 
