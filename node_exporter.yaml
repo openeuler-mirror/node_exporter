@@ -1,0 +1,4 @@
+version_control: github
+src_repo: prometheus/node_exporter
+tag_prefix: ^v
+seperator: .
