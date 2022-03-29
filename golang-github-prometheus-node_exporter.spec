@@ -27,7 +27,7 @@
 
 Name:           golang-%{provider}-%{project}-%{repo}
 Version:        1.0.1
-Release:        2
+Release:        3
 Summary:        Exporter for machine metrics
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
@@ -36,13 +36,18 @@ Source1:        sysconfig.node_exporter
 Source2:        node_exporter.service
 Source3:        node_exporter_textfile_wrapper.sh
 Source4:        textfile_collectors_README
+%ifarch riscv64
+# From https://github.com/prometheus/procfs/pull/318 325
+Patch0500:      add_cpuinfo_parsing_for_riscv.patch
+Patch0501:      fix_build_on_riscv.patch
+%endif
 
 Provides:       node_exporter = %{version}-%{release}
 
 BuildRequires:  systemd
 
 # e.g. el6 has ppc64 arch without gcc-go, so EA tag is required
-ExclusiveArch:  %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 aarch64 %{arm}}
+ExclusiveArch:  %{?go_arches:%{go_arches}}%{!?go_arches:%{ix86} x86_64 aarch64 %{arm} riscv64}
 
 %description
 %{summary}
@@ -91,6 +96,13 @@ providing packages with %{import_path} prefix.
 %setup -q -n %{repo}-%{version}
 mkdir -p _build/src/%{provider}.%{provider_tld}/%{project}
 ln -s $(pwd) _build/src/%{provider_prefix}
+%ifarch riscv64
+pushd .
+cd vendor/github.com/prometheus/procfs
+%patch0500 -p1
+%patch0501 -p1
+popd
+%endif
 
 %build
 # mkdir -p _build/src/%{provider}.%{provider_tld}/%{project}
@@ -248,6 +260,9 @@ chmod 771 /var/lib/node_exporter/textfile_collector
 %endif
 
 %changelog
+* Tue Mar 29 2022 laokz <laokz@foxmail.com> 1.0.1-3
+- Apply upstream patches to support riscv64
+
 * Sat Feb 21 2021 yangzhao <yangzhao1@kylinos.cn> 1.0.1-2
 - Remove unnecessary requirements
 
