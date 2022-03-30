@@ -1,0 +1,39 @@
+commit 910e68572b35da779e4f84cfa5261b0a67532d05
+Author: Tobias Klauser <tklauser@distanz.ch>
+Date:   Mon Sep 7 12:37:51 2020 +0200
+
+    Fix build on RISCV
+    
+    PR #318 forgot to wire parseCPUInfo to parseCPUInfoRISCV on
+    GOARCH=riscv{,64}, leading to a build/test failure:
+    
+    ./cpuinfo.go:71:9: undefined: parseCPUInfo
+    ./cpuinfo_test.go:222:2: undefined: parseCPUInfo
+    
+    Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+
+diff --git a/cpuinfo_riscvx.go b/cpuinfo_riscvx.go
+new file mode 100644
+index 0000000..e83c2e2
+--- /dev/null
++++ b/cpuinfo_riscvx.go
+@@ -0,0 +1,19 @@
++// Copyright 2020 The Prometheus Authors
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++// http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++
++// +build linux
++// +build riscv riscv64
++
++package procfs
++
++var parseCPUInfo = parseCPUInfoRISCV
